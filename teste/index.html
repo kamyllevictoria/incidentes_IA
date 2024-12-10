@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Consultar Dados por Ano e Mês</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script>
+        google.charts.load('current', { packages: ['corechart'] });
+       
+        function delay(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+ 
+        async function consultarDados() {
+            const ano = document.getElementById('Ano').value;
+            const categoria = document.getElementById('Categoria').value;
+
+            document.querySelector('#resultado').innerHTML = 'Processando...';
+ 
+            try {
+                const response = await fetch(`http://localhost:4000/consultar-dados?ano=${ano}&categoria=${categoria}`);
+                const message = await response.text();
+
+                if(ano != "todos" && categoria == "todos") {
+                    await delay(72000);
+                }
+                else {
+                    await delay(60000);
+                }
+               
+                console.log(message);
+               
+                (async() => {
+                    const resposta = await fetch('dados.json');
+                    const dados = await resposta.json();
+
+                    if(ano == "todos") {
+                        var dataArray = [['Ano', 'Dados']];
+                        dados.forEach(item => {
+                            dataArray.push([`Ano ${item.ano}`, parseInt(item.dados, 10)]);
+                        });
+
+                        drawChartAno(dataArray);
+                    }
+                    else {
+                        var dataArray = [['Mês', 'Dados']];
+                        dados.forEach(item => {
+                            var mes = "";
+
+                            switch(item.mes) {
+                                case 1: mes = "Janeiro";
+                                break;
+    
+                                case 2: mes = "Fevereiro";
+                                break;
+    
+                                case 3: mes = "Março";
+                                break;
+
+                                case 4: mes = "Abril";
+                                break;
+
+                                case 5: mes = "Maio";
+                                break;
+
+                                case 6: mes = "Junho";
+                                break;
+
+                                case 7: mes = "Julho";
+                                break;
+
+                                case 8: mes = "Agosto";
+                                break;
+
+                                case 9: mes = "Setembro";
+                                break;
+
+                                case 10: mes = "Outubro";
+                                break;
+
+                                case 11: mes = "Novembro";
+                                break;
+
+                                case 12: mes = "Dezembro";
+                                break;
+                            }
+
+                            dataArray.push([`${mes}`, parseInt(item.dados, 10)]);
+                        });
+
+                        drawChartMes(dataArray);
+                    }
+ 
+                    // Remover a mensagem "Processando..." após o gráfico ser gerado
+                    document.querySelector('#resultado').innerHTML = '';
+                })();
+            } catch (error) {
+                console.error('Erro ao buscar dados:', error);
+                document.querySelector('#resultado').innerHTML = 'Erro ao buscar dados. Tente novamente.';
+            }
+        }
+ 
+        function drawChartMes(dataArray = [['Mês', 'Dados']]) {
+            const ano = document.getElementById('Ano').value;
+            var categoria = document.getElementById('Categoria').value;
+
+            if(categoria == "todos") {
+                categoria = "Todas as Categorias";
+            }
+
+            var data = google.visualization.arrayToDataTable(dataArray);
+            var options = {
+                title: `Dados por Mês do Ano ${ano} - ${categoria}`,
+                width: '100vw',
+                height: 400,
+                chartArea: { width: '80%', height: '70%' }
+            };
+ 
+            var chart = new google.visualization.ColumnChart(document.getElementById('chart_div'));
+            chart.draw(data, options);
+        }
+
+        function drawChartAno(dataArray = [['Ano', 'Dados']]) {
+            var categoria = document.getElementById('Categoria').value;
+
+            if(categoria == "todos") {
+                categoria = "Todas as Categorias";
+            }
+
+            var data = google.visualization.arrayToDataTable(dataArray);
+            var options = {
+                title: `Dados por Ano - ${categoria}`,
+                width: '100%',
+                height: 600,
+                chartArea: { width: '40%', height: '70%' }
+            };
+ 
+            var chart = new google.visualization.ColumnChart(document.getElementById('chart_div'));
+            chart.draw(data, options);
+        }
+    </script>
+</head>
+<body>
+    <nav class="navbar navbar-light">
+        <h3>IA Database Incident</h3>
+    </nav>
+
+    <section class="section-1">
+        <div class="container text-center">
+            <h2></h2>
+            <p>
+                Atualmente, o avanço na criação e aprimoramento de inteligências artificiais tem trazido benefícios significativos para diversas áreas, como saúde, educação e entretenimento. No entanto, essas tecnologias nem sempre geram resultados positivos.
+                
+                O uso inadequado dessas ferramentas para a criação de informações falsas, conteúdos midiáticos de credibilidade duvidosa e práticas desrespeitosas envolvendo diferentes etnias pode resultar em violações ao público que utiliza essas tecnologias. Esses problemas se agravam com a crescente disponibilidade e popularização dos recursos no meio digital, especialmente na ausência de regulamentação governamental adequada.</p>
+        </div>
+    </section>
+
+    <section class="section-2">
+        <div class="container mb-50">
+            <h3 class="text-center">Consulte as incidências dos casos de acordo com o ano informado e o tipo de ocorrência:</h3>
+            
+            <div class="row d-flex justify-content-center">
+                <div class="col-lg-3">
+                    <select class="form-control" name="ano" id="Ano">
+                        <option value="todos" selected>Todos os anos</option>
+                        <option value="2020">2020</option>
+                        <option value="2021">2021</option>
+                        <option value="2022">2022</option>
+                        <option value="2023">2023</option>
+                        <option value="2024">2024</option>
+                    </select>
+                </div>
+    
+                <div class="col-lg-3">
+                    <select class="form-control" name="categoria" id="Categoria">
+                        <option value="todos" selected>Todas as categorias</option>
+                        <option value="Deepfake">Deepfake</option>
+                        <option value="Racism">Racismo</option>
+                        <option value="Privacy">Privacidade</option>
+                        <option value="Security">Segurança</option>
+                        <option value="Fake News">Fake News</option>
+                    </select>
+                </div>
+                <div class="col-lg-3 mt-1">
+                    <div>
+                        <button class="btnConsultar" onclick="consultarDados()">Consultar Dados</button>
+                    </div>
+                </div>
+            </div>
+            <div id="resultado"></div>
+        </div>
+
+        <div id="chart_div" class="mt-4"></div>
+    </section>
+    
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+</html>
