@@ -18,11 +18,10 @@ O projeto foi desenvolvido em grupo para complementar o artigo desenvolvido para
 
 - [Kamylle Victoria Santos Bellini](https://github.com/kamyllevictoria)
 - [Kleber Victor Santos Lemes](https://github.com/KleberV10)
-- Nicole Okumura Charalae
+- [Nicole Okumura Charalae](https://github.com/NicoleCharale)
 - [Sarah de Jesus Lima](https://github.com/ImNotSarah)
 
 # Screenshots:
 
-![Captura de tela 2024-12-10 112414](https://github.com/user-attachments/assets/2c529d7f-acd0-4c52-bc8d-6e47e4c90964)
-
-![Captura de tela 2024-12-10 112429](https://github.com/user-attachments/assets/1dffb826-77b9-4ad1-a17b-0acdae4ff6ff)
+![Captura de tela 2024-12-17 001327](https://github.com/user-attachments/assets/d135478f-9706-4c1c-a0f9-272e36824f29)
+![Captura de tela 2024-12-17 001700](https://github.com/user-attachments/assets/4044a5bd-5782-44cf-8200-50d74f1bd166)
